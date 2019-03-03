@@ -7,6 +7,7 @@ from sources.Grid import Grid
 
 
 def load_images():
+
     textures = []
     textures.append(pygame.image.load("data/0.png").convert_alpha())
     textures.append(pygame.image.load("data/1.png").convert_alpha())
