@@ -4,12 +4,13 @@ from sources.Cell import Cell
 
 
 class Grid:
-    def __init__(self,DISPLAY, textures, x_min, y_min, x_max, y_max, nb_black_cells, nb_cells_horizontal, nb_cells_vertical):
+    def __init__(self,DISPLAY, textures, x_min, y_min, x_max, y_max, nb_black_cells,nb_nearby_cells, nb_cells_horizontal, nb_cells_vertical):
         self.cell_width = (x_max - x_min ) // nb_cells_horizontal
         self.cell_height = (y_max - y_min) // nb_cells_vertical
         self.DISPLAY = DISPLAY
         self.textures = textures
         self.nb_black_cells = nb_black_cells
+        self.nb_nearby_cells = nb_nearby_cells
         self.grid= [ [ None for y in range( nb_cells_vertical ) ] for x in range( nb_cells_horizontal ) ]
         self.nb_cells_horizontal = nb_cells_horizontal
         self.nb_cells_vertical = nb_cells_vertical
@@ -59,6 +60,13 @@ class Grid:
             return False
         return self.grid[x_index][y_index].is_black
 
+    def is_shown(self,x_index ,y_index):
+        if x_index<0 or x_index >= self.nb_cells_horizontal:
+            return False
+        if y_index < 0 or y_index >= self.nb_cells_vertical:
+            return False
+        return self.grid[x_index][y_index].is_shown
+
     def create_grid(self):
         for i in range(0, len(self.grid)):
             for j in range(0, len(self.grid[0])):
@@ -70,6 +78,12 @@ class Grid:
             while (self.is_black(x, y) == True):
                 x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
             self.grid[x][y].is_black = True
+
+        for i in range(0, self.nb_nearby_cells):  # pose le nombre de bombes nécéssaire
+            x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
+            while (self.is_shown(x, y) == True):
+                x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
+            self.grid[x][y].is_shown = True
             # pose la bombe seulement si la position n'est pas deja utilisé ou si la position n'est pas celle de depart
         self.set_nearby_black_cell_count()
 
