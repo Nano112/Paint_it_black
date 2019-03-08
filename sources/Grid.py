@@ -50,7 +50,7 @@ class Grid:
         x_index = x_index // self.cell_width
         y_index = y_index // self.cell_height
         if  (x_index>=self.nb_cells_horizontal) or (x_index<0) or (y_index>=self.nb_cells_vertical) or (y_index<0):
-            return
+            return None, None
         return x_index,y_index
 
     def is_black(self,x_index ,y_index):
@@ -91,7 +91,10 @@ class Grid:
         self.set_nearby_black_cell_count()
 
     def forme_logique(self):
-        pass #A faire
+        for i in range(0,len(self.grid)):
+            for j in range (0,len(self.grid[0])):
+                self.grid[i][j].probleme_logique()
+
 
 
 
