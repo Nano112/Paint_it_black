@@ -4,7 +4,8 @@ from sources import Grid
 
 
 class Cell:
-    def __init__(self, x_pos, y_pos, width, height, is_black):
+    def __init__(self, x_pos, y_pos, width, height, is_black, index):
+        self.index = index
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.width = width

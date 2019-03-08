@@ -71,7 +71,8 @@ class Grid:
         for i in range(0, len(self.grid)):
             for j in range(0, len(self.grid[0])):
                 x_position, y_position = self.index_to_pos(i, j)
-                self.grid[i][j] = Cell(x_position, y_position, self.cell_width, self.cell_height, False)
+                self.grid[i][j] = Cell(x_position, y_position, self.cell_width, self.cell_height, False,i *len(self.grid[0])+j+1)
+                print(i *len(self.grid[0])+j+1)
 
         for i in range(0, self.nb_black_cells):  # pose le nombre de bombes nécéssaire
             x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
@@ -79,13 +80,20 @@ class Grid:
                 x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
             self.grid[x][y].is_black = True
 
-        for i in range(0, self.nb_nearby_cells):  # pose le nombre de bombes nécéssaire
+        for i in range(0, self.nb_nearby_cells):  # pose le nombre cases visibles
             x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
             while (self.is_shown(x, y) == True):
                 x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
             self.grid[x][y].is_shown = True
-            # pose la bombe seulement si la position n'est pas deja utilisé ou si la position n'est pas celle de depart
+            # pose la case visible seulement si la position n'est pas deja utilisé
+
+
         self.set_nearby_black_cell_count()
+
+    def forme_logique(self):
+        pass #A faire
+
+
 
     def nearby_black_cell_count(self, x_index, y_index):
         val = 0

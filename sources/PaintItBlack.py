@@ -37,7 +37,7 @@ WHITE = (255,255,255)
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 10, 10, 10, 10)
+grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 1, 1, 3, 3)
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
