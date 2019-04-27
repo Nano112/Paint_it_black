@@ -3,7 +3,7 @@
 def listeVersVariable(liste):
     retour = []
     for x in len(liste):
-        for y in len(liste[]):
+        for y in len(liste[0]):
             if liste[x][y]:
                 retour.append(x*len(liste)+y)
     return retour
