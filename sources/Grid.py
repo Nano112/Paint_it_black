@@ -72,7 +72,6 @@ class Grid:
             for j in range(0, len(self.grid[0])):
                 x_position, y_position = self.index_to_pos(i, j)
                 self.grid[i][j] = Cell(x_position, y_position, self.cell_width, self.cell_height, False,i *len(self.grid[0])+j+1)
-                print(i *len(self.grid[0])+j+1)
 
         for i in range(0, self.nb_black_cells):  # pose le nombre de bombes nécéssaire
             x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
@@ -116,6 +115,13 @@ class Grid:
             for y in range(0, self.nb_cells_vertical):
                 self.grid[x][y].nearby_black_cells = self.nearby_black_cell_count(x,y)
 
+
+    def returnGrid(self):
+        grid = [[None for y in range(self.nb_cells_vertical ) ] for x in range( self.nb_cells_horizontal ) ]
+        for x in range(0, self.nb_cells_horizontal):
+            for y in range(0, self.nb_cells_vertical):
+                grid[x][y] = self.grid[x][y].nearby_black_cells
+        return grid
 
 def random_pos(x_max, y_max):
     return random.randrange(x_max), random.randrange(y_max)

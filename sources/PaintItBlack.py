@@ -4,6 +4,7 @@ from pygame.locals import *
 import sys
 
 from sources.Grid import Grid
+from sources.table_de_verite import *
 
 
 def load_images():
@@ -24,8 +25,8 @@ def load_images():
     return textures
 
 
-display_width = 640
-display_height = 840
+display_width = 300
+display_height = 300
 pygame.init()
 
 DISPLAY = pygame.display.set_mode((display_width, display_height), 0, 32)
@@ -35,7 +36,12 @@ WHITE = (255, 255, 255)
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-grid = Grid(DISPLAY, textures, 20, 220, display_width-20, display_height-20, 1, 16, 4, 4)
+grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 1, 16, 4, 4)
+
+grill = grid.returnGrid()
+print(grill)
+print(list_to_fnc(grill))
+
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
