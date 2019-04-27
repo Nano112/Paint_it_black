@@ -102,7 +102,8 @@ def clauses(chiffre, i):
     return (clausepositive, clausenegative)
 
 
-def list_to_fnc(liste, defini=[]):
+def list_to_fnc(list, defini=[]):
+    liste = listeVersVariable(list)
     fnc = []
     for i in defini:
         fnc.append(i)
