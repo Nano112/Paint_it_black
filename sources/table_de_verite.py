@@ -344,4 +344,3 @@ def fnc_to_dimacs(fnc,nbvar):
         f.write(ligne)
     f.close()
 
-def 
