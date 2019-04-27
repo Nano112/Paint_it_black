@@ -5,13 +5,14 @@ from sources.Cell import Cell
 
 class Grid:
     def __init__(self,DISPLAY, textures, x_min, y_min, x_max, y_max, nb_black_cells,nb_nearby_cells, nb_cells_horizontal, nb_cells_vertical):
+
         self.cell_width = (x_max - x_min ) // nb_cells_horizontal
         self.cell_height = (y_max - y_min) // nb_cells_vertical
         self.DISPLAY = DISPLAY
         self.textures = textures
         self.nb_black_cells = nb_black_cells
         self.nb_nearby_cells = nb_nearby_cells
-        self.grid= [ [ None for y in range( nb_cells_vertical ) ] for x in range( nb_cells_horizontal ) ]
+        self.grid = [ [ None for y in range( nb_cells_vertical ) ] for x in range( nb_cells_horizontal ) ]
         self.nb_cells_horizontal = nb_cells_horizontal
         self.nb_cells_vertical = nb_cells_vertical
         self.x_min_position = x_min
@@ -68,10 +69,12 @@ class Grid:
         return self.grid[x_index][y_index].is_shown
 
     def create_grid(self):
+
         for i in range(0, len(self.grid)):
             for j in range(0, len(self.grid[0])):
                 x_position, y_position = self.index_to_pos(i, j)
-                self.grid[i][j] = Cell(x_position, y_position, self.cell_width, self.cell_height, False,i *len(self.grid[0])+j+1)
+                self.grid[i][j] = Cell(x_position, y_position, self.cell_width, self.cell_height, False, i * len(self.grid[0])+j+1)
+
 
         for i in range(0, self.nb_black_cells):  # pose le nombre de bombes nécéssaire
             x, y = random_pos(self.nb_cells_horizontal, self.nb_cells_vertical)
