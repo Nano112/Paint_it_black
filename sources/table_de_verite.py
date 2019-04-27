@@ -1,5 +1,12 @@
 ##case_actuel=lng*i+(j+1)
 
+def listeVersVariable(liste):
+    retour = []
+    for x in len(liste):
+        for y in len(liste[]):
+            if liste[x][y]:
+                retour.append(x*len(liste)+y)
+    return retour
 
 def cote(i, j, lng):
     retourne = ''
@@ -252,7 +259,8 @@ def combinliste(seq, k):
             p.append(s)
     return p
 
-def clauses(chiffre,i):
+
+def clauses(chiffre, i):
     n=len(chiffre)
     chiffrenegatif=[]
     for j in chiffre:
