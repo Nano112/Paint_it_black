@@ -14,7 +14,6 @@ class Cell:
         self.state = False
         self.nearby_black_cells = 0
         self.is_shown = False
-        self.probleme_logique= ''
 
     def draw_cell(self, DISPLAY, textures, revealed):
         if self.state:
@@ -28,6 +27,3 @@ class Cell:
         if revealed and self.is_black:
             DISPLAY.blit(pygame.transform.scale(textures[12], (self.width, self.height)),
                          (self.x_pos, self.y_pos))
-
-    def traduction_logique(self):
-        pass

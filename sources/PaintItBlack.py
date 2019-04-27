@@ -38,9 +38,10 @@ textures = load_images()
 
 grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 1, 16, 4, 4)
 
-grill = grid.returnGrid()
+grill = grid.returnGridNearby()
+grillState = grid.returnGridState()
 print(grill)
-print(list_to_fnc(grill))
+print(list_to_fnc(grill,grillState))
 
 while True:
     for event in pygame.event.get():
