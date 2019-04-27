@@ -36,7 +36,7 @@ WHITE = (255, 255, 255)
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 2, 9, 3, 3)
+grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 2, 5, 3, 3)
 
 grill = grid.returnGridNearby()
 
