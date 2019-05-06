@@ -10,7 +10,7 @@ def listeVersVariable(liste):
 
 
 def liste_to_dimacs(liste, defin=[], sattrois=True):
-    print(defin)
+
     defini = listeVersVariable(defin)
     print(defini)
     fnc = list_to_fnc(liste, defini)
@@ -115,10 +115,10 @@ def clauses(chiffre, i):
     return (clausepositive, clausenegative)
 
 
-def list_to_fnc(liste, defini=[]):
+def list_to_fnc(liste, defini = []):
     fnc = []
     for i in defini:
-        fnc.append(i)
+        fnc.append([i])
     lng = len(liste)
     for ligne in range(len(liste)):
         for colonne in range(len(liste)):

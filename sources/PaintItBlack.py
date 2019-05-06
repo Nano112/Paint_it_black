@@ -36,12 +36,19 @@ WHITE = (255, 255, 255)
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 2, 5, 3, 3)
+grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 2, 95, 10, 10)
 
 grill = grid.returnGridNearby()
 
 grillState = grid.returnGridState()
 liste_to_dimacs(grill)
+
+grillState = grid.returnGridState()
+print(grillState)
+print(grill)
+liste_to_dimacs(grill, grillState)
+
+grid.revealed = not grid.revealed
 
 while True:
     for event in pygame.event.get():
@@ -49,13 +56,18 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONUP:
-            grillState = grid.returnGridState()
-            liste_to_dimacs(grill,grillState)
+
             pos_x, pos_y = pygame.mouse.get_pos()
             if event.button == 1:
                 grid.toggle(pos_x, pos_y)
             if event.button == 3:
-                grid.revealed = not grid.revealed
+                grid.toggleBombe( pos_x, pos_y)
+
+
+            grillState = grid.returnGridState()
+            print(grillState)
+            print(grill)
+            liste_to_dimacs(grill, grillState)
 
     grid.draw_grid()
     pygame.display.update()

@@ -12,7 +12,7 @@ class Grid:
         self.textures = textures
         self.nb_black_cells = nb_black_cells
         self.nb_nearby_cells = nb_nearby_cells
-        self.grid = [ [ None for y in range( nb_cells_vertical ) ] for x in range( nb_cells_horizontal ) ]
+        self.grid = [[None for y in range(nb_cells_vertical)] for x in range( nb_cells_horizontal ) ]
         self.nb_cells_horizontal = nb_cells_horizontal
         self.nb_cells_vertical = nb_cells_vertical
         self.x_min_position = x_min
@@ -27,6 +27,18 @@ class Grid:
         for i in range(0, self.nb_cells_horizontal):
             for j in range(0, self.nb_cells_vertical):
                 self.grid[i][j].draw_cell(self.DISPLAY, self.textures, self.revealed)
+
+
+    def toggleBombe(self, x_position, y_position):
+        x_index, y_index = self.pos_to_index(x_position, y_position)
+        if x_index == None or y_index == None:
+            return
+        self.grid[x_index][y_index].is_black = not self.grid[x_index][y_index].is_black
+        self.set_nearby_black_cell_count()
+
+
+
+
 
     def toggle(self, x_position, y_position):
         x_index, y_index = self.pos_to_index(x_position, y_position)
@@ -50,7 +62,7 @@ class Grid:
         y_index = y_position - self.y_min_position
         x_index = x_index // self.cell_width
         y_index = y_index // self.cell_height
-        if  (x_index>=self.nb_cells_horizontal) or (x_index<0) or (y_index>=self.nb_cells_vertical) or (y_index<0):
+        if(x_index >= self.nb_cells_horizontal) or (x_index < 0) or (y_index >= self.nb_cells_vertical) or (y_index < 0):
             return None, None
         return x_index,y_index
 
