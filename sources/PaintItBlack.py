@@ -4,6 +4,7 @@ from pygame.locals import *
 import sys
 from pysat.formula import CNF
 
+from sources.Button import Button
 from sources.Menu import Menu
 from sources.Grid import Grid
 from sources.table_de_verite import *
@@ -56,6 +57,10 @@ def init_grille(nb_bombes: int = 2, pourcentage_affiche: float = 1, taille_bombe
                 display_width - padding_side, display_height - padding_bottom, nb_bombes, nb_grilles_affiche,
                 taille_bombes_horizontal, taille_bombes_verticals)
 
+def reveal_unreveal():
+    grid.revealed = not grid.revealed
+
+
 
 padding_top = 20
 padding_middle = 0
@@ -68,15 +73,29 @@ display_width = width + 2 * padding_side
 display_height = menu_height + grille_height + padding_top + padding_middle + padding_bottom
 
 pygame.init()
+pygame.font.init()
+
 DISPLAY = pygame.display.set_mode((display_width, display_height), 0, 32)
 WHITE = (100, 100, 100)
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-menu = Menu(DISPLAY, textures, menu_height)
-
 grid = init_grille(nb_bombes=4, taille_bombes_horizontal=10, taille_bombes_verticals=5)
-grid.revealed = True
+
+def regen_grid():
+    global grid
+    grid = init_grille(nb_bombes=4, taille_bombes_horizontal=10, taille_bombes_verticals=5)
+
+
+buttons = []
+buttons.append(Button(padding_side, padding_top, 30, 30, 10, lambda: reveal_unreveal()))
+buttons.append(Button(padding_side*2+30, padding_top, 30, 30, 10, lambda: regen_grid()))
+buttons.append(Button(padding_side*3+30*2, padding_top, 30, 30, 10, lambda: print("3 !!!")))
+buttons.append(Button(padding_side*4+30*3, padding_top, 30, 30, 10, lambda: print("4 !!!")))
+menu = Menu(DISPLAY, textures, menu_height, buttons)
+
+
+
 updateDIMACS()
 
 while True:
@@ -89,7 +108,7 @@ while True:
             pos_x, pos_y = pygame.mouse.get_pos()
             if event.button == 1:
                 grid.toggle(pos_x, pos_y)
-                menu.get_clicked(pos_x,pos_y)
+                menu.get_clicked(pos_x, pos_y)
             if event.button == 3:
                 grid.toggleBombe(pos_x, pos_y)
 
