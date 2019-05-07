@@ -3,7 +3,7 @@ import pygame
 
 class Output:
 
-    def __init__(self, x, y, largeur, hauteur, texture_id, string,police ='Comic Sans MS', taille = 10):
+    def __init__(self, x, y, largeur, hauteur, texture_id, string, police='Comic Sans MS', taille=120):
         self.font = pygame.font.SysFont(police, taille)
         self.string = string
         self.largeur = largeur
@@ -25,7 +25,7 @@ class Output:
 
 
 
-    def draw_text(self, DISPLAY, textures):
+    def draw_output(self, DISPLAY, textures):
         textsurface = self.font.render(self.string, False, (0, 0, 0))
         DISPLAY.blit(pygame.transform.scale(textures[self.texture_id], (self.largeur, self.hauteur)), (self.x, self.y))
-        DISPLAY.blit(pygame.transform.scale(textsurface, (self.largeur, self.hauteur)), (self.x, self.y))
+        DISPLAY.blit(pygame.transform.scale(textsurface, (self.largeur-10, self.hauteur-5)), (self.x+5, self.y+5))

@@ -7,6 +7,7 @@ from pysat.formula import CNF
 from sources.Button import Button
 from sources.Menu import Menu
 from sources.Grid import Grid
+from sources.Output import Output
 from sources.table_de_verite import *
 
 
@@ -28,7 +29,7 @@ def load_images():
     return textures
 
 
-def updateDIMACS(verbose=False):
+def updateDIMACS(verbose=True):
     grillState = grid.returnGridState()
     grill = grid.returnGridNearby()
 
@@ -48,27 +49,60 @@ def updateDIMACS(verbose=False):
         print("SAT : ", solution)
 
 
-
-def init_grille(nb_bombes: int = 2, pourcentage_affiche: float = 1, taille_bombes_verticals: int = 3,
+def init_grille(nb_bombes: int = 2, nb_grilles_affiche: int = 1, taille_bombes_verticals: int = 3,
                 taille_bombes_horizontal: int = 3):
-    nb_grilles_affiche = taille_bombes_verticals * taille_bombes_horizontal
-    nb_grilles_affiche = int(nb_grilles_affiche * pourcentage_affiche)
     return Grid(DISPLAY, textures, padding_side, padding_top + menu_height + padding_middle,
                 display_width - padding_side, display_height - padding_bottom, nb_bombes, nb_grilles_affiche,
                 taille_bombes_horizontal, taille_bombes_verticals)
+
 
 def reveal_unreveal():
     grid.revealed = not grid.revealed
 
 
+def get_nb_cells_horizontal():
+    global grid
+    return grid.nb_cells_horizontal
 
-padding_top = 20
+
+def get_nb_cells_vertical():
+    global grid
+    return grid.nb_cells_vertical
+
+
+def set_nb_cells_horizontal(n):
+    global grid
+    grid.nb_cells_horizontal = n
+
+
+def set_nb_cells_vertical(n):
+    global grid
+    grid.nb_cells_vertical = n
+
+
+def increase_cells_horizontal():
+    set_nb_cells_horizontal(get_nb_cells_horizontal() + 1)
+
+
+def increase_cells_vertical():
+    set_nb_cells_vertical(get_nb_cells_vertical() + 1)
+
+
+def decrease_cells_horizontal():
+    set_nb_cells_horizontal(get_nb_cells_horizontal() - 1)
+
+
+def decrease_cells_vertical():
+    set_nb_cells_vertical(get_nb_cells_vertical() - 1)
+
+
+padding_top = 0
 padding_middle = 0
-padding_bottom = 20
-padding_side = 20
-width = 1000
-menu_height = 200
-grille_height = 500
+padding_bottom = 0
+padding_side = 0
+width = 600
+menu_height = 0
+grille_height = 600
 display_width = width + 2 * padding_side
 display_height = menu_height + grille_height + padding_top + padding_middle + padding_bottom
 
@@ -80,24 +114,91 @@ WHITE = (100, 100, 100)
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-grid = init_grille(nb_bombes=4, taille_bombes_horizontal=10, taille_bombes_verticals=5)
+nb_cases_noir = 20
+
+nb_cases_afficher = 70
+
+nb_cases_verticals = 10
+
+nb_cases_horizontal = 10
+
+grid = init_grille(nb_cases_noir, nb_cases_afficher, nb_cases_verticals, nb_cases_horizontal)
+
 
 def regen_grid():
     global grid
-    grid = init_grille(nb_bombes=4, taille_bombes_horizontal=10, taille_bombes_verticals=5)
+    grid = init_grille(nb_cases_noir, nb_cases_afficher, nb_cases_verticals, nb_cases_horizontal)
 
 
 buttons = []
-buttons.append(Button(padding_side, padding_top, 30, 30, 10, lambda: reveal_unreveal()))
-buttons.append(Button(padding_side*2+30, padding_top, 30, 30, 10, lambda: regen_grid()))
-buttons.append(Button(padding_side*3+30*2, padding_top, 30, 30, 10, lambda: print("3 !!!")))
-buttons.append(Button(padding_side*4+30*3, padding_top, 30, 30, 10, lambda: print("4 !!!")))
-menu = Menu(DISPLAY, textures, menu_height, buttons)
+outputs = []
+
+standard_size = 30
 
 
+def plus_moin(pos_x, pos_y, string, l1, l2):
+    global buttons
+    global outputs
+    buttons.append(Button(pos_x, pos_y, 30, 30, 10, l1))  # moin large
+    outputs.append(Output(pos_x + padding_side + 30, pos_y, 60 + padding_side, 30, 10, string))
+    buttons.append(Button(pos_x + padding_side * 3 + 90, pos_y, 30, 30, 10, l2))  # plus large
+
+
+buttons.append(Button(padding_side, padding_top, standard_size, standard_size, 10,
+                      lambda: reveal_unreveal()))  # afficher la solution
+buttons.append(Button(padding_side * 2 + standard_size, padding_top, standard_size, standard_size, 10,
+                      lambda: regen_grid()))  # regenere la grille
+
+
+def diminuer_cases_noires():
+    global nb_cases_noir
+    nb_cases_noir = nb_cases_noir - 1
+
+
+def augmenter_cases_noires():
+    global nb_cases_noir
+    nb_cases_noir = nb_cases_noir + 1
+
+
+def diminuer_case_a_afficher():
+    global nb_cases_afficher
+    nb_cases_afficher = nb_cases_afficher - 1
+
+
+def augmenter_cases_a_afficher():
+    global nb_cases_afficher
+    nb_cases_afficher = nb_cases_afficher + 1
+
+
+def diminuer_cases_horizontal():
+    decrease_cells_horizontal()
+
+
+def augmenter_cases_horizontal():
+    increase_cells_horizontal()
+
+
+def diminuer_cases_vertical():
+    decrease_cells_vertical()
+
+
+def augmenter_cases_horizontal():
+    increase_cells_vertical()
+
+
+plus_moin(200, padding_top, 'nb_noir', lambda: diminuer_cases_noires(),
+          lambda: augmenter_cases_a_afficher())  # Nombres de cases noires
+plus_moin(200, padding_top * 2 + standard_size, "nb_affiche", lambda: diminuer_case_a_afficher(),
+          lambda: augmenter_cases_a_afficher())  # Nombres de case afficher
+plus_moin(200, padding_top * 3 + standard_size * 2, "nb_horiz", lambda: diminuer_cases_horizontal(),
+          lambda: augmenter_cases_horizontal())  # nombres de case horizontal
+plus_moin(200, padding_top * 4 + standard_size * 3, "nb_vert", lambda: diminuer_cases_vertical(),
+          lambda: augmenter_cases_horizontal())  # nombre de cases vertical
+
+menu = Menu(DISPLAY, textures, menu_height, buttons, outputs)
 
 updateDIMACS()
-
+reveal_unreveal()
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -116,4 +217,3 @@ while True:
     menu.draw_menu()
     grid.draw_grid()
     pygame.display.update()
-
