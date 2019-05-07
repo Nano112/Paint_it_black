@@ -1,7 +1,9 @@
-
+import pycosat as pycosat
 import pygame
 from pygame.locals import *
 import sys
+from pysat.formula import CNF
+from pysat.solvers import Lingeling
 
 from sources.Grid import Grid
 from sources.table_de_verite import *
@@ -24,26 +26,47 @@ def load_images():
     textures.append(pygame.image.load("data/isblack.png").convert_alpha())
     return textures
 
+padding_top = 0
+padding_middle = 0
+padding_bottom = 0
+padding_side = 0
 
-display_width = 300
-display_height = 300
+width = 300
+menu_height = 0
+grille_height = 300
+
+
+
+display_width = width + 2 * padding_side
+display_height = menu_height + grille_height + padding_top + padding_middle + padding_bottom
+
 pygame.init()
 
 DISPLAY = pygame.display.set_mode((display_width, display_height), 0, 32)
+
 
 WHITE = (255, 255, 255)
 
 DISPLAY.fill(WHITE)
 textures = load_images()
 
-grid = Grid(DISPLAY, textures, 0, 0, display_width, display_height, 2, 95, 10, 10)
+nb_bombes = 2
+pourcentage_affiche = 1
+taille_bombes_verticals = 3
+taille_bombes_horizontal = 3
 
+nb_grilles_affiche = taille_bombes_verticals * taille_bombes_horizontal
+nb_grilles_affiche = (int) (nb_grilles_affiche * pourcentage_affiche)
+
+
+
+
+
+
+grid = Grid(DISPLAY, textures, padding_side, padding_top + menu_height + padding_middle , display_width-padding_side, display_height-padding_bottom, nb_bombes, nb_grilles_affiche, taille_bombes_horizontal, taille_bombes_verticals)
+
+grillState = grid.returnGridState()
 grill = grid.returnGridNearby()
-
-grillState = grid.returnGridState()
-liste_to_dimacs(grill)
-
-grillState = grid.returnGridState()
 print(grillState)
 print(grill)
 liste_to_dimacs(grill, grillState)
@@ -65,9 +88,15 @@ while True:
 
 
             grillState = grid.returnGridState()
+            grill = grid.returnGridNearby()
             print(grillState)
             print(grill)
-            liste_to_dimacs(grill, grillState)
+            liste_to_dimacs(grill, grillState, False)
+
+            formula = CNF(from_file='DIMACS.cnf').clauses
+            print("dimacs: ", formula)
+            print("SAT : ", pycosat.solve(formula))
+
 
     grid.draw_grid()
     pygame.display.update()

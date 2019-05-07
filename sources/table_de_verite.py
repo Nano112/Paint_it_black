@@ -124,7 +124,7 @@ def list_to_fnc(liste, defini = []):
         for colonne in range(len(liste)):
             nb = liste[ligne][colonne]
             if nb != -1:
-                if nb == 9 or ((ligne == 0 or colonne == lng - 1) and (
+                if nb == 9 or ( (
                         ((cote(ligne, colonne, lng) == 'bord') and nb == 6) or (
                         (cote(ligne, colonne, lng) == 'coin') and nb == 4))):  # cas certain non nul
                     certain(liste, fnc, ligne, colonne, lng)
