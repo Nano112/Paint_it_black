@@ -20,6 +20,25 @@ def liste_to_dimacs(liste, defin=[], sattrois=True):
         fnc, nbvar = fnc_to_3fnc(fnc, nbvar)
     fnc_to_dimacs(fnc, nbvar)
 
+def position_adjacente(p, largeur, hauteur):
+    adj = []
+    adj.append(p-1-largeur)
+    adj.append(p-largeur)
+    adj.append(p+1-largeur)
+    adj.append(p-1)
+    adj.append(p)
+    adj.append(p+1)
+    adj.append(p - 1 + largeur)
+    adj.append(p + largeur)
+    adj.append(p + 1 + largeur)
+    for i in range(0,len(adj)):
+        if adj[i]<0 | adj[i]>(largeur*hauteur):
+            adj.remove(i)
+    return adj
+
+
+
+
 
 def cote(i, j, lng):
     retourne = ''
