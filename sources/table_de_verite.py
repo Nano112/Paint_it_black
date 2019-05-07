@@ -1,18 +1,17 @@
-##case_actuel=lng*i+(j+1)
+##case_actuel=largeur*i+(j+1)
 
 def listeVersVariable(liste):
     retour = []
     for x in range(0, len(liste)):
         for y in range(0, len(liste[0])):
             if liste[x][y]:
-                retour.append(x * len(liste) + y)
+                retour.append(x * len(liste[0]) + y+1)
     return retour
 
 
 def liste_to_dimacs(liste, defin=[], sattrois=True):
 
     defini = listeVersVariable(defin)
-    print(defini)
     fnc = list_to_fnc(liste, defini)
     nbvar = len(liste) * len(liste[0])
 
@@ -21,90 +20,61 @@ def liste_to_dimacs(liste, defin=[], sattrois=True):
     fnc_to_dimacs(fnc, nbvar)
 
 def position_adjacente(p, largeur, hauteur):
-    adj = []
-    adj.append(p-1-largeur)
-    adj.append(p-largeur)
-    adj.append(p+1-largeur)
-    adj.append(p-1)
-    adj.append(p)
-    adj.append(p+1)
-    adj.append(p - 1 + largeur)
-    adj.append(p + largeur)
-    adj.append(p + 1 + largeur)
-    for i in range(0,len(adj)):
-        if adj[i]<0 | adj[i]>(largeur*hauteur):
-            adj.remove(i)
+    adj = [p - largeur, p, p + largeur]
+    if p % largeur != 1:
+        adj.append(p - 1 - largeur)
+        adj.append(p - 1)
+        adj.append(p - 1 + largeur)
+    if p % largeur != 0:
+        adj.append(p + 1 + largeur)
+        adj.append(p + 1 - largeur)
+        adj.append(p + 1)
+    for i in range(len(adj)-1, 0-1, -1):
+        if adj[i] <= 0:
+            adj.pop(i)
+            continue
+        if adj[i] > (largeur*hauteur):
+            adj.pop(i)
     return adj
+position_adjacente(1,3,3)
 
 
 
 
 
-def cote(i, j, lng):
+def cote(i, j ,largeur,hauteur):
     retourne = ''
 
     if i == 0:
         if j == 0:
             return 'coin'  ##haut gauche
-        elif j == lng - 1:
+        elif j == largeur - 1:
             return 'coin'  ##haut droit
         return 'bord'  ##haut
-    elif i == lng - 1:
+    elif i == hauteur - 1:
         if j == 0:
             return 'coin'  ##bas gauche
-        elif j == lng - 1:
+        elif j == largeur - 1:
             return 'coin'  ##bas droit
         return 'bord'  ##bas
     elif j == 0:  ## gauche
         return 'bord'
-    elif j == lng - 1:  ## droit
+    elif j == largeur - 1:  ## droit
         return 'bord'
     else:
         return 'milieu'  ## milieu
 
 
-def certain(liste, fnc, i, j, lng):
-    if i > 0:  # ligne 1
-        if j > 0:
-            fnc.append([(i - 1) * lng + j])
-        fnc.append([(i - 1) * lng + j + 1])
-        if j < lng - 1:
-            fnc.append([(i - 1) * lng + j + 2])
-
-    if j > 0:  # ligne 2
-        fnc.append([i * lng + j])
-    fnc.append([i * lng + j + 1])
-    if j < lng - 1:
-        fnc.append([i * lng + j + 2])
-
-    if i < lng - 1:  # ligne 3
-        if j > 0:
-            fnc.append([(i + 1) * lng + j])
-        fnc.append([(i + 1) * lng + j + 1])
-        if j < lng - 1:
-            fnc.append([(i + 1) * lng + j + 2])
+def certain(liste, fnc, i, j, largeur, hauteur):
+    listecase=position_adjacente(largeur*i+(j+1),largeur,hauteur)
+    for n in listecase:
+        fnc.append([n])
 
 
-def nul(liste, fnc, i, j, lng):
-    if i > 0:  # ligne 1
-        if j > 0:
-            fnc.append([-((i - 1) * lng + j)])
-        fnc.append([-((i - 1) * lng + j + 1)])
-        if j < lng - 1:
-            fnc.append([-((i - 1) * lng + j + 2)])
-
-    if j > 0:  # ligne 2
-        fnc.append([-(i * lng + j)])
-    fnc.append([-(i * lng + j + 1)])
-    if j < lng - 1:
-        fnc.append([-(i * lng + j + 2)])
-
-    if i < lng - 1:  # ligne 3
-        if j > 0:
-            fnc.append([(-(i + 1) * lng + j)])
-        fnc.append([-((i + 1) * lng + j + 1)])
-        if j < lng - 1:
-            fnc.append([-((i + 1) * lng + j + 2)])
+def nul(liste, fnc, i, j, largeur,hauteur):
+    listecase=position_adjacente(largeur*i+(j+1),largeur,hauteur)
+    for n in listecase:
+        fnc.append([-n])
 
 
 def combinliste(seq, k):
@@ -138,38 +108,22 @@ def list_to_fnc(liste, defini = []):
     fnc = []
     for i in defini:
         fnc.append([i])
-    lng = len(liste)
+    hauteur = len(liste)
+    largeur = len(liste[0])
     for ligne in range(len(liste)):
-        for colonne in range(len(liste)):
+        for colonne in range(len(liste[0])):
             nb = liste[ligne][colonne]
             if nb != -1:
                 if nb == 9 or ( (
-                        ((cote(ligne, colonne, lng) == 'bord') and nb == 6) or (
-                        (cote(ligne, colonne, lng) == 'coin') and nb == 4))):  # cas certain non nul
-                    certain(liste, fnc, ligne, colonne, lng)
+                        ((cote(ligne, colonne, largeur, hauteur) == 'bord') and nb == 6) or (
+                        (cote(ligne, colonne, largeur,hauteur) == 'coin') and nb == 4))):  # cas certain non nul
+                    certain(liste, fnc, ligne, colonne, largeur, hauteur)
 
                 elif nb == 0:  # cas certain nul
-                    nul(liste, fnc, ligne, colonne, lng)
+                    nul(liste, fnc, ligne, colonne, largeur,hauteur)
                 else:  # cas incertain
 
-                    chiffres = []  ##definition des chiffres couverts
-                    if ligne > 0:  # ligne 1
-                        if colonne > 0:
-                            chiffres.append(((ligne - 1) * lng + colonne))
-                        chiffres.append(((ligne - 1) * lng + colonne + 1))
-                        if colonne < lng - 1:
-                            chiffres.append(((ligne - 1) * lng + colonne + 2))
-                    if colonne > 0:  # ligne 2
-                        chiffres.append((ligne * lng + colonne))
-                    chiffres.append((ligne * lng + colonne + 1))
-                    if colonne < lng - 1:
-                        chiffres.append((ligne * lng + colonne + 2))
-                    if ligne < lng - 1:  # ligne 3
-                        if colonne > 0:
-                            chiffres.append(((ligne + 1) * lng + colonne))
-                        chiffres.append(((ligne + 1) * lng + colonne + 1))
-                        if colonne < lng - 1:
-                            chiffres.append(((ligne + 1) * lng + colonne + 2))
+                    chiffres = position_adjacente(largeur*ligne+(colonne+1),largeur,hauteur)
 
                     clausepositive, clausenegative = clauses(chiffres, nb)
                     for clp in clausepositive:

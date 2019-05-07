@@ -135,14 +135,14 @@ class Grid:
         grid = [[None for y in range(self.nb_cells_vertical ) ] for x in range( self.nb_cells_horizontal ) ]
         for x in range(0, self.nb_cells_horizontal):
             for y in range(0, self.nb_cells_vertical):
-                grid[y][x] = self.grid[x][y].nearby_black_cells
+                grid[x][y] = self.grid[x][y].nearby_black_cells
         return grid
 
     def returnGridState(self):
         grid = [[None for y in range(self.nb_cells_vertical)] for x in range(self.nb_cells_horizontal)]
         for x in range(0, self.nb_cells_horizontal):
             for y in range(0, self.nb_cells_vertical):
-                grid[y][x] = self.grid[x][y].state
+                grid[x][y] = self.grid[x][y].state
         return grid
 
 def random_pos(x_max, y_max):
